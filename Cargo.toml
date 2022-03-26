@@ -1,0 +1,10 @@
+[package]
+name = "image_rpg_rewrite"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nom = { version="7", features = ["alloc"] }
+thiserror = "1.0"

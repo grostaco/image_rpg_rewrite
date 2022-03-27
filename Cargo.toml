@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 nom = { version="7", features = ["alloc"] }
 thiserror = "1.0"
+image = "0.24.1"

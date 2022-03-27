@@ -22,6 +22,16 @@ pub struct Jump {
     pub path: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct LoadBG {
+    pub bg: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Sprite {
+    pub bg: String,
+}
+
 impl DirectiveTrait for Jump {
     fn parse(name: &str, args: &[&str]) -> Option<Result<Self, DirectiveError>>
     where
@@ -47,6 +57,26 @@ impl DirectiveTrait for Jump {
     }
 
     fn exec(&self, engine: &mut Engine) {
-        engine.script = Script::from_file(&self.path).unwrap();
+        engine.script = Script::from_file(&self.path).unwrap().peekable();
+    }
+}
+
+impl DirectiveTrait for LoadBG {
+    fn parse(name: &str, args: &[&str]) -> Option<Result<Self, DirectiveError>>
+    where
+        Self: Sized,
+    {
+        if name != "loadbg" {
+            return None;
+        }
+
+        let bg_path = get!(args, 0, "bg path");
+        Some(Ok(Self {
+            bg: bg_path.to_string(),
+        }))
+    }
+
+    fn exec(&self, engine: &mut Engine) {
+        engine.bg_path = Some(self.bg.to_string());
     }
 }

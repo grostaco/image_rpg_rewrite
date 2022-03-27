@@ -24,12 +24,12 @@ where
 pub fn line_chars(start: &str, mid: &str) -> (usize, usize) {
     let slice = start.get(..start.offset(mid)).unwrap();
     let lines = slice.chars().map(|c| (c == '\n') as usize).sum::<usize>() + 1;
-
     let chars = mid
         .chars()
         .position(|c| c == '\r' || c == '\n')
         .unwrap_or(mid.len().max(1) - 1)
         + 1;
+
     //println!("{chars}\n{:#?}", mid);
 
     (lines, chars)

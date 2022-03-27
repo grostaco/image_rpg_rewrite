@@ -1,4 +1,8 @@
-use engine::parse::Script;
+use engine::{
+    error::{DirectiveError, EngineError},
+    parse::Script,
+    util::line_chars,
+};
 
 mod engine;
 
@@ -7,10 +11,26 @@ fn main() {
     while let Some(ctx) = s.next() {
         match ctx {
             Ok(ctx) => {
-                println!("{:#?} {:#?}", ctx, s.line_chars());
+                println!("{:#?}", ctx);
             }
             Err(error) => {
-                println!("{:#?}", error);
+                match error {
+                    EngineError::Directive(d) => match d {
+                        DirectiveError::UnknownDirective(_) => {
+                            println!(
+                                "{:#?}",
+                                line_chars(
+                                    s.ctx(),
+                                    s.cur().get(..s.cur().find('(').unwrap()).unwrap()
+                                ),
+                            );
+                        }
+                        d => println!("{}", d),
+                    },
+                    EngineError::Incomplete(n) => println!("{:#?}", n),
+                    EngineError::Nom(nom) => println!("{}", nom),
+                };
+                break;
             }
         }
     }
